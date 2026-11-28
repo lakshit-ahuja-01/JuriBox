@@ -3,9 +3,6 @@ package juribox.service;
 import juribox.exception.CourtSchedulingException.SchedulingConflictException;
 import juribox.model.*;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 /**
@@ -56,11 +53,6 @@ public class ConflictChecker {
                         s1.getCaseId(), s1.getEndSlot(), maxDailySlots));
             }
 
-            if (isSunday(s1.getDate())) {
-                conflicts.add(String.format("Holiday Conflict: Case %s is scheduled on a Sunday (%s)",
-                        s1.getCaseId(), s1.getDate()));
-            }
-
             if (judge != null) {
                 Set<Integer> available = judge.getAvailableSlotsForDate(s1.getDate());
                 for (int slot = s1.getStartSlot(); slot <= s1.getEndSlot(); slot++) {
@@ -101,11 +93,6 @@ public class ConflictChecker {
                                    List<Schedule> existingSchedules, String ignoreScheduleId,
                                    int maxDailySlots) throws SchedulingConflictException {
         int endSlot = startSlot + duration - 1;
-
-        if (isSunday(date)) {
-            throw new SchedulingConflictException(
-                    "Court is closed on Sundays (" + date + "). Please select a working day.");
-        }
 
         if (startSlot < 1 || endSlot > maxDailySlots) {
             throw new SchedulingConflictException(String.format(
@@ -158,15 +145,6 @@ public class ConflictChecker {
                     }
                 }
             }
-        }
-    }
-
-    private boolean isSunday(String date) {
-        if (date == null) return false;
-        try {
-            return LocalDate.parse(date.trim()).getDayOfWeek() == DayOfWeek.SUNDAY;
-        } catch (DateTimeParseException e) {
-            return false;
         }
     }
 }

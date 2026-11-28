@@ -48,13 +48,9 @@ public class SimulatorTest {
         assert conflicts.isEmpty() : "Initial auto-schedule should yield 0 conflicts";
         System.out.println("-> PASSED: Zero conflicts detected.\n");
 
-        String day1 = cm.getCourtDates().get(0);
-        String day2 = cm.getCourtDates().get(1);
-        String day3 = cm.getCourtDates().get(2);
-
         // 4. Test Daily Schedule display
-        System.out.println("[TEST 4] Formatting daily schedule for " + day1 + "...");
-        String dailyView = cm.formatDailySchedule(day1);
+        System.out.println("[TEST 4] Formatting daily schedule for 2026-11-10...");
+        String dailyView = cm.formatDailySchedule("2026-11-10");
         System.out.println(dailyView);
         assert dailyView.contains("Slot 1") : "Daily schedule should include Slot 1";
         System.out.println("-> PASSED: Daily schedule formatted.\n");
@@ -62,9 +58,9 @@ public class SimulatorTest {
         // 5. Test Rescheduling valid slot
         System.out.println("[TEST 5] Testing valid rescheduling of Case C101...");
         try {
-            // Move C101 from its current slot to Day 2, Slot 1
-            Schedule resched = cm.rescheduleCase("C101", day2, 1, "J01", "CR01");
-            assert resched.getDate().equals(day2) : "Date should be " + day2;
+            // Move C101 from its current slot to Day 2 (2026-11-11), Slot 1
+            Schedule resched = cm.rescheduleCase("C101", "2026-11-11", 1, "J01", "CR01");
+            assert resched.getDate().equals("2026-11-11") : "Date should be 2026-11-11";
             assert resched.getStartSlot() == 1 : "Slot should be 1";
             Case c101 = cm.searchCase("C101");
             assert c101.getStatus() == CaseStatus.RESCHEDULED : "Status should be RESCHEDULED";
@@ -77,7 +73,7 @@ public class SimulatorTest {
         System.out.println("[TEST 6] Testing conflict prevention when attempting an illegal reschedule...");
         try {
             // Try to force C101 (Civil case) onto Criminal Judge J02 -> Specialization mismatch!
-            cm.rescheduleCase("C101", day2, 1, "J02", "CR01");
+            cm.rescheduleCase("C101", "2026-11-11", 1, "J02", "CR01");
             throw new RuntimeException("Expected SchedulingConflictException but operation succeeded!");
         } catch (SchedulingConflictException e) {
             System.out.println("-> Catching expected conflict: " + e.getMessage());
@@ -91,7 +87,7 @@ public class SimulatorTest {
         try {
             // C103 is a violent criminal case in custody requiring high-security room CR02.
             // Attempting to move it to standard room CR01 should fail.
-            cm.rescheduleCase("C103", day3, 1, "J02", "CR01");
+            cm.rescheduleCase("C103", "2026-11-12", 1, "J02", "CR01");
             throw new RuntimeException("Expected SchedulingConflictException for security mismatch!");
         } catch (SchedulingConflictException e) {
             System.out.println("-> Catching expected conflict: " + e.getMessage());
@@ -109,7 +105,7 @@ public class SimulatorTest {
 
         // 9. Test Multithreaded Court Session Simulation
         System.out.println("[TEST 9] Testing concurrent multithreaded simulation across all courtrooms...");
-        cm.simulateCourtDay(day1, 30); // fast 30ms simulation delay
+        cm.simulateCourtDay("2026-11-10", 30); // fast 30ms simulation delay
         System.out.println("-> PASSED: Concurrent courtroom threads executed and joined successfully.\n");
 
         // 10. Test Save and Load Persistence (File Streams)

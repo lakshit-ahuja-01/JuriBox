@@ -198,10 +198,7 @@ public class Main {
         System.out.println("\n" + B + BC + ">> AUTO-SCHEDULER" + R + "\n" + D + "Running auto-scheduler..." + R);
         List<Schedule> scheduled = courtManager.schedulePendingCases();
         System.out.printf(G + "[OK] Successfully scheduled %d case(s)!" + R + "\n", scheduled.size());
-        for (Schedule s : scheduled) {
-            String day = java.time.LocalDate.parse(s.getDate()).getDayOfWeek().name();
-            System.out.println("  " + BC + s + " [Hearing: " + s.getDate() + " (" + day + ")]" + R);
-        }
+        for (Schedule s : scheduled) System.out.println("  " + BC + s + R);
 
         List<String> conflicts = courtManager.detectConflicts();
         if (conflicts.isEmpty()) {
@@ -214,10 +211,9 @@ public class Main {
     }
 
     private static void handleDailySchedule() {
-        String defaultDate = courtManager.getCourtDates().get(0);
-        System.out.print(BC + "> Enter Date (YYYY-MM-DD, default " + defaultDate + "): " + R);
+        System.out.print(BC + "> Enter Date (YYYY-MM-DD, e.g. 2026-11-10): " + R);
         String date = scanner.nextLine().trim();
-        if (date.isEmpty()) date = defaultDate;
+        if (date.isEmpty()) date = "2026-11-10";
         System.out.print(courtManager.formatDailySchedule(date));
         System.out.print(courtManager.getFormattedStatistics());
     }
@@ -233,10 +229,9 @@ public class Main {
     }
 
     private static void handleSimulation() {
-        String defaultDate = courtManager.getCourtDates().get(0);
-        System.out.print(BC + "> Enter date to simulate (default " + defaultDate + "): " + R);
+        System.out.print(BC + "> Enter date to simulate (default 2026-11-10): " + R);
         String date = scanner.nextLine().trim();
-        if (date.isEmpty()) date = defaultDate;
+        if (date.isEmpty()) date = "2026-11-10";
         courtManager.simulateCourtDay(date, 400);
     }
 }

@@ -7,8 +7,6 @@ import juribox.model.Case.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 
 /*
@@ -51,13 +49,9 @@ public class CourtManager {
         this.databaseManager = new DatabaseManager(dataDirectory);
         this.courtSimulation = new CourtSimulation();
 
-        LocalDate cursor = LocalDate.now();
-        while (this.courtDates.size() < 7) {
-            if (cursor.getDayOfWeek() != DayOfWeek.SUNDAY) {
-                this.courtDates.add(cursor.toString());
-            }
-            cursor = cursor.plusDays(1);
-        }
+        this.courtDates.add("2026-11-10");
+        this.courtDates.add("2026-11-11");
+        this.courtDates.add("2026-11-12");
     }
 
     // --- Case Management ---
