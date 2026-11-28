@@ -451,13 +451,4 @@ public class CourtManager {
     public int[] getDatabaseMenuCounts() {
         return databaseManager.getMenuCounts();
     }
-
-    public String getHearingDateForCase(String caseId) {
-        for (Schedule s : schedules) {
-            if (s.getCaseId().equalsIgnoreCase(caseId)) {
-                return s.getDate();
-            }
-        }
-        return null;
-    }
 }

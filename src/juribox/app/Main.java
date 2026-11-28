@@ -135,21 +135,19 @@ public class Main {
         System.out.println("\n" + B + BC + ">> ALL REGISTERED CASES" + R);
         List<Case> cases = courtManager.getAllCases();
         if (cases.isEmpty()) { System.out.println(D + "No cases registered." + R); return; }
-        String line = C + "+--------+----------------------------+----------+----------+-------+-------------+---------------+--------------+" + R;
+        String line = C + "+--------+----------------------------+----------+----------+-------+-------------+---------------+" + R;
         System.out.println(line);
-        System.out.printf(C + "| " + B + W + "%-6s " + C + "| " + B + W + "%-26s " + C + "| " + B + W + "%-8s " + C + "| " + B + W + "%-8s " + C + "| " + B + W + "%-5s " + C + "| " + B + W + "%-11s " + C + "| " + B + W + "%-13s " + C + "| " + B + W + "%-12s " + C + "|" + R + "\n",
-                "ID", "Title", "Type", "Priority", "Slots", "Status", "Schedule", "Hearing Date");
+        System.out.printf(C + "| " + B + W + "%-6s " + C + "| " + B + W + "%-26s " + C + "| " + B + W + "%-8s " + C + "| " + B + W + "%-8s " + C + "| " + B + W + "%-5s " + C + "| " + B + W + "%-11s " + C + "| " + B + W + "%-13s " + C + "|" + R + "\n",
+                "ID", "Title", "Type", "Priority", "Slots", "Status", "Schedule");
         System.out.println(line);
         for (Case c : cases) {
             String title = c.getTitle().length() > 26 ? c.getTitle().substring(0, 23) + "..." : c.getTitle();
             String pc = c.getPriority() == Priority.HIGH ? RD : c.getPriority() == Priority.MEDIUM ? Y : G;
             String sc = c.getStatus() == CaseStatus.PENDING ? Y : c.getStatus() == CaseStatus.SCHEDULED ? G : "\u001B[96m";
             String sched = c.getAssignedScheduleId() != null ? c.getAssignedScheduleId() : "-";
-            String rawDate = courtManager.getHearingDateForCase(c.getCaseId());
-            String hearingDate = rawDate != null ? rawDate : "--";
-            System.out.printf(C + "| " + B + W + "%-6s " + C + "| " + R + "%-26s " + C + "| " + R + "%-8s " + C + "| " + pc + "%-8s " + C + "| " + R + "%-5d " + C + "| " + sc + "%-11s " + C + "| " + (sched.equals("-") ? D : BC) + "%-13s " + C + "| " + (hearingDate.equals("--") ? D : BC) + "%-12s " + C + "|" + R + "\n",
+            System.out.printf(C + "| " + B + W + "%-6s " + C + "| " + R + "%-26s " + C + "| " + R + "%-8s " + C + "| " + pc + "%-8s " + C + "| " + R + "%-5d " + C + "| " + sc + "%-11s " + C + "| " + (sched.equals("-") ? D : BC) + "%-13s " + C + "|" + R + "\n",
                     c.getCaseId(), title, c.getCaseType().getDisplayName(), c.getPriority().getDisplayName(),
-                    c.getDurationSlots(), c.getStatus().name(), sched, hearingDate);
+                    c.getDurationSlots(), c.getStatus().name(), sched);
         }
         System.out.println(line);
     }
